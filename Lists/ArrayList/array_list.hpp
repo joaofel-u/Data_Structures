@@ -82,12 +82,6 @@ class ArrayList {
     T* contents;
     std::size_t size_;
     std::size_t max_size_;
-
-    /// Move os elementos para tras a partir de firstIndex (inclusivo)
-    void moveElementsBack(std::size_t firstIndex);
-
-    /// Move os elementos para frente a partir de firstIndex (inclusivo)
-    void moveElementsAhead(std::size_t firstIndex);
 };
 
 }  // namespace structures
@@ -135,7 +129,8 @@ void structures::ArrayList<T>::insert(const T& data, std::size_t index) {
         throw std::out_of_range("Invalid index!");
 
     if (index < size_)
-        moveElementsBack(index);
+        for (unsigned int i = size_; i > index; i--)
+            contents[i] = contents[i-1];
 
     contents[index] = data;
     size_++;
@@ -159,7 +154,8 @@ T structures::ArrayList<T>::pop(std::size_t index) {
         throw std::out_of_range("Invalid index!");
 
     T data = contents[index];
-    moveElementsAhead(index);
+    for (unsigned int i = index; i < size_ - 1; i++)
+        contents[i] = contents[i+1];
     size_--;
     return data;
 }
@@ -248,17 +244,4 @@ const T& structures::ArrayList<T>::operator[](std::size_t index) const {
         throw std::out_of_range("Invalid index!");
 
     return contents[index];
-}
-
-/// Métodos para movimentação dos elementos pela lista
-template <typename T>
-void structures::ArrayList<T>::moveElementsBack(std::size_t firstIndex) {
-    for (unsigned int i = size_; i > firstIndex; i--)
-        contents[i] = contents[i-1];
-}
-
-template <typename T>
-void structures::ArrayList<T>::moveElementsAhead(std::size_t firstIndex) {
-    for (unsigned int i = firstIndex; i < size_ - 1; i++)
-        contents[i] = contents[i+1];
 }
